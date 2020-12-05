@@ -23,6 +23,7 @@ import (
 
 	ut "github.com/go-playground/universal-translator"
 	validator "github.com/go-playground/validator/v10"
+	jwtFiber "github.com/gofiber/jwt/v2"
 	"github.com/streadway/amqp"
 	"gofiber/pkg/redis"
 )
@@ -30,25 +31,20 @@ import (
 const (
 	defaultLimit   = 10
 	maxLimit       = 50
-	defaultOrderBy = "id"
 	defaultSort    = "asc"
-	// PasswordLength ...
 	PasswordLength  = 6
 	defaultLastPage = 0
 )
 
-// GlobalSmsCounter ...
-var GlobalSmsCounter int
-
-// AmqpConnection ...
-var AmqpConnection *amqp.Connection
-
-// AmqpChannel ...
-var AmqpChannel *amqp.Channel
+var (
+	AmqpConnection *amqp.Connection
+	AmqpChannel *amqp.Channel
+)
 
 // UcContract ...
 type UcContract struct {
 	ReqID        string
+	UserID       string
 	DB           *sql.DB
 	TX           *sql.Tx
 	AES          aes.Credential
@@ -59,6 +55,7 @@ type UcContract struct {
 	Validate     *validator.Validate
 	Translator   ut.Translator
 	JwtCred      jwt.JwtCredential
+	JwtConfig    jwtFiber.Config
 	AWSS3        aws.AWSS3
 	Pusher       pusher.Credential
 	GoMailConfig mailing.GoMailConfig

@@ -5,6 +5,8 @@ import (
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	"github.com/gofiber/fiber/v2"
+	jwtFiber "github.com/gofiber/jwt/v2"
+	"go/types"
 	"gofiber/pkg/jwe"
 	"gofiber/pkg/responsedto"
 	"gofiber/pkg/str"
@@ -20,6 +22,7 @@ type Handler struct {
 	Db         *sql.DB
 	Validator  *validator.Validate
 	Translator ut.Translator
+	JwtConfig  jwtFiber.Config
 }
 
 //base send response
@@ -67,10 +70,14 @@ func (h Handler) ExtractErrorValidationMessages(error validator.ValidationErrors
 }
 
 //handling error
-func(h Handler) ErrorHandling(err error) string{
-	if err != nil {
-		return err.Error()
+func (h Handler) RequestBodyHandling(ctx *fiber.Ctx, input *types.Type) error {
+	if err := ctx.BodyParser(input); err != nil {
+		return h.SendResponse(ctx, nil, nil, err, http.StatusBadRequest)
+	}
+	if err := h.Validator.Struct(input); err != nil {
+		errMessage := h.ExtractErrorValidationMessages(err.(validator.ValidationErrors))
+		return h.SendResponse(ctx, nil, nil, errMessage, http.StatusBadRequest)
 	}
 
-	return ""
+	return nil
 }

@@ -14,6 +14,7 @@ require (
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-redis/redis/v7 v7.4.0
 	github.com/gofiber/fiber/v2 v2.2.3
+	github.com/gofiber/jwt/v2 v2.1.0
 	github.com/joho/godotenv v1.3.0
 	github.com/keighl/mandrill v0.0.0-20170605120353-1775dd4b3b41
 	github.com/klauspost/compress v1.11.3 // indirect
@@ -26,9 +27,9 @@ require (
 	github.com/minio/minio-go/v7 v7.0.6
 	github.com/pusher/pusher-http-go v4.0.1+incompatible
 	github.com/rs/xid v1.2.1
-	github.com/rubenv/sql-migrate v0.0.0-20200616145509-8d140a17f351 // indirect
 	github.com/sfreiberg/gotwilio v0.0.0-20200916182813-169c4cd5c691
 	github.com/sirupsen/logrus v1.7.0
+	github.com/smartystreets/goconvey v1.6.4 // indirect
 	github.com/streadway/amqp v1.0.0
 	golang.org/x/crypto v0.0.0-20200709230013-948cd5f35899
 	golang.org/x/oauth2 v0.0.0-20201203001011-0b49973bad19

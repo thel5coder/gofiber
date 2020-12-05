@@ -10,6 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/rs/xid"
 	conf "gofiber/config"
@@ -61,6 +62,7 @@ func main() {
 		Translator: translator,
 		JwtCred:    configs.JwtCred,
 	}
+	boot.App.Use(recover.New())
 	boot.App.Use(requestid.New())
 	boot.App.Use(cors.New())
 	boot.App.Use(logger.New(logger.Config{
