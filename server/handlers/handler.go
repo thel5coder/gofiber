@@ -26,9 +26,10 @@ type Handler struct {
 func (h Handler) SendResponse(ctx *fiber.Ctx, data interface{}, meta interface{}, err interface{}, code int) error {
 	if code == 0 && err != nil {
 		code = http.StatusUnprocessableEntity
+		err = err.(error).Error()
 	}
 
-	if code != http.StatusOK {
+	if code != http.StatusOK && err != nil {
 		return h.SendErrorResponse(ctx, err, code)
 	}
 
@@ -63,4 +64,13 @@ func (h Handler) ExtractErrorValidationMessages(error validator.ValidationErrors
 	}
 
 	return errorMessage
+}
+
+//handling error
+func(h Handler) ErrorHandling(err error) string{
+	if err != nil {
+		return err.Error()
+	}
+
+	return ""
 }

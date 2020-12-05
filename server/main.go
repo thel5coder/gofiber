@@ -17,12 +17,15 @@ import (
 	"gofiber/usecase"
 	"log"
 	"os"
+	"time"
 )
 
 var (
 	validatorDriver *validator.Validate
 	uni             *ut.UniversalTranslator
 	translator      ut.Translator
+	logFormat = `{"host":"${host}","pid":"${pid}","time":"${time}","request-id":"${locals:requestid}","status":"${status}","method":"${method}","latency":"${latency}","path":"${path}",`+
+		`"user-agent":"${ua}","in":"${bytesReceived}","out":"${bytesSent}"}`
 )
 
 func main() {
@@ -38,8 +41,6 @@ func main() {
 
 	//init fiber app
 	app := fiber.New()
-	app.Use(requestid.New())
-	app.Use(cors.New())
 
 	ucContract := usecase.UcContract{
 		ReqID:       xid.New().String(),
@@ -62,7 +63,11 @@ func main() {
 	}
 	boot.App.Use(requestid.New())
 	boot.App.Use(cors.New())
-	boot.App.Use(logger.New())
+	boot.App.Use(logger.New(logger.Config{
+		Format: logFormat+"\n",
+		TimeFormat: time.RFC3339,
+		TimeZone:   "Asia/Jakarta",
+	}))
 	boot.RegisterRouters()
 	log.Fatal(boot.App.Listen(os.Getenv("APP_HOST_SERVER")))
 }

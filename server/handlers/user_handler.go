@@ -43,17 +43,20 @@ func (handler UserHandler) Edit(ctx *fiber.Ctx) error {
 	input := new(requests.UserRequest)
 
 	if err := ctx.BodyParser(input); err != nil {
-		return handler.SendResponse(ctx, nil, nil, err, http.StatusBadRequest)
+		return handler.SendErrorResponse(ctx,err.Error(),http.StatusBadRequest)
 	}
 	if err := handler.Validator.Struct(input); err != nil {
 		errMessage := handler.ExtractErrorValidationMessages(err.(validator.ValidationErrors))
-		return handler.SendResponse(ctx, nil, nil, errMessage, http.StatusBadRequest)
+		return handler.SendErrorResponse(ctx,errMessage,http.StatusBadRequest)
 	}
 
 	uc := usecase.UserUseCase{UcContract: handler.UcContract}
 	res, err := uc.Edit(input, ID)
+	if err != nil {
+		return handler.SendErrorResponse(ctx,err.Error(),http.StatusUnprocessableEntity)
+	}
 
-	return handler.SendResponse(ctx, res, nil, err, 0)
+	return handler.SendSuccessResponse(ctx,res,nil)
 }
 
 //add
@@ -61,17 +64,20 @@ func(handler UserHandler) Add(ctx *fiber.Ctx) error{
 	input := new(requests.UserRequest)
 
 	if err := ctx.BodyParser(input); err != nil {
-		return handler.SendResponse(ctx, nil, nil, err, http.StatusBadRequest)
+		return handler.SendErrorResponse(ctx,err.Error(),http.StatusBadRequest)
 	}
 	if err := handler.Validator.Struct(input); err != nil {
 		errMessage := handler.ExtractErrorValidationMessages(err.(validator.ValidationErrors))
-		return handler.SendResponse(ctx, nil, nil, errMessage, http.StatusBadRequest)
+		return handler.SendErrorResponse(ctx,errMessage,http.StatusBadRequest)
 	}
 
 	uc := usecase.UserUseCase{UcContract: handler.UcContract}
 	res, err := uc.Add(input)
+	if err != nil {
+		return handler.SendErrorResponse(ctx,err.Error(),http.StatusUnprocessableEntity)
+	}
 
-	return handler.SendResponse(ctx, res, nil, err, 0)
+	return handler.SendSuccessResponse(ctx,res,nil)
 }
 
 //delete

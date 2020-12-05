@@ -2,11 +2,13 @@ package usecase
 
 import (
 	"database/sql"
+	"errors"
 	"gofiber/db/repository"
 	"gofiber/db/repository/models"
 	"gofiber/pkg/functioncaller"
 	"gofiber/pkg/hashing"
 	"gofiber/pkg/logruslogger"
+	"gofiber/pkg/messages"
 	"gofiber/server/requests"
 	"gofiber/usecase/viewmodel"
 	"time"
@@ -92,8 +94,8 @@ func (uc UserUseCase) Add(input *requests.UserRequest) (res string, err error) {
 		return res, err
 	}
 	if count > 0 {
-		logruslogger.Log(logruslogger.WarnLevel, err.Error(), functioncaller.PrintFuncName(), "uc-user-countByemailAlreadyExist")
-		return res, err
+		logruslogger.Log(logruslogger.WarnLevel, messages.DataAlreadyExist, functioncaller.PrintFuncName(), "uc-user-countByemailAlreadyExist")
+		return res, errors.New(messages.DataAlreadyExist)
 	}
 
 	password, _ := hashing.HashAndSalt(input.Password)
@@ -103,7 +105,7 @@ func (uc UserUseCase) Add(input *requests.UserRequest) (res string, err error) {
 		CreatedAt: now,
 		UpdatedAt: now,
 	}
-	res, err = repo.Edit(model)
+	res, err = repo.Add(model)
 	if err != nil {
 		logruslogger.Log(logruslogger.WarnLevel, err.Error(), functioncaller.PrintFuncName(), "query-user-add")
 		return res, err

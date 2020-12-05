@@ -56,7 +56,7 @@ func (repository UserRepository) scanRow(row *sql.Row) (res models.User, err err
 
 //browse
 func (repository UserRepository) Browse(search, orderBy, sort string, limit, offset int) (data []models.User, count int, err error) {
-	statement := userSelectStatement + ` from "users" ` + userWhereStatement + ` order by ` + orderBy + ` ` + sort + ` limit $2 offset $2`
+	statement := userSelectStatement + ` from "users" ` + userWhereStatement + ` order by ` + orderBy + ` ` + sort + ` limit $2 offset $3`
 	rows, err := repository.DB.Query(statement, "%"+strings.ToLower(search)+"%", limit, offset)
 	if err != nil {
 		return data, count, err

@@ -5,7 +5,10 @@ import (
 )
 
 func ErrorResponse(message interface{}) viewmodel.ResponseErrorVm {
-	return viewmodel.ResponseErrorVm{Messages: message}
+	err := []interface{}{message}
+	res :=  viewmodel.ResponseErrorVm{Messages: err}
+
+	return res
 }
 
 func SuccessResponse(data interface{}, meta interface{}) viewmodel.ResponseSuccessVm {
