@@ -1,0 +1,4 @@
+/.idea/
+.env
+dbconfig.yml
+vendor
